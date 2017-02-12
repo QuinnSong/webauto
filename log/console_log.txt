@@ -1,0 +1,15 @@
+test_alert_present (__main__.PythonDemoTest)
+
+Work with Alert: ... ok
+
+test_open_page (__main__.PythonDemoTest)
+
+Open Base URL: ... ok
+
+
+
+----------------------------------------------------------------------
+
+Ran 2 tests in 38.660s
+
+OK
