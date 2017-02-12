@@ -6,6 +6,7 @@
 # Credit to: www.way2automation.com
 # web_auto.py: python's unittest framework
 # --------------------------------------------------------------
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 #from selenium.webdriver.common.keys import Keys
@@ -48,8 +49,9 @@ class PythonDemoTest(unittest.TestCase):
             [Note] tricky for last three elements (i.e. username, password, submit).
             It's so easy to land on invisable elements at bottom layer; Using a
             different xpath can solve the issue.
+        10. Once registratin successful, try the login using username/password
             -----------------------------------------------------------------------""" 
-        self.openPage()
+        self.openPage() # open target webpage
         try:
             WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, ur"//section/div[2]/div[2]/div[6]/ul/li/a/figure"))
@@ -71,28 +73,57 @@ class PythonDemoTest(unittest.TestCase):
             try: self.assertTrue( EC.alert_is_present)
             except AssertionError as e: self.verification_errors.append(str(e))
             
-            alert = self.driver.switch_to_alert()
+            self.driver.switch_to_alert()
             
             try: self.assertEqual(self.driver.find_element_by_xpath("//form[@class='ajaxsubmit']/h3").text, "REGISTRATION FORM")
             except AssertionError as e: self.verification_errors.append(str(e))
             
-            # Fill out registration form
-            self.driver.find_element_by_xpath("//input[@name='name']").send_keys("John You")
-            self.driver.find_element_by_xpath("//input[@name='phone']").send_keys("212-2121")
-            self.driver.find_element_by_xpath("//input[@name='email']").send_keys("john.you@email.com")
-            
-            select = Select(self.driver.find_element_by_name("country"))            
-            select.select_by_value("Canada")
-            #Or: select.select_by_visible_text("Canada")
-            
-            self.driver.find_element_by_xpath("//input[@name='city']").send_keys("Calgary")
-            # The following 3 elements are tricky; easy to get  "ElementNotVisibleException"
-            self.driver.find_element_by_xpath("//form/fieldset[6]/input").send_keys("quinn")
-            self.driver.find_element_by_xpath("//form/fieldset[7]/input").send_keys("song")
-            self.driver.find_element_by_xpath("(//form/div/div[2]/input)[2]").click()
+            # call our registration form
+            self.registration_form ()
             
         except Exception as e:
             self.verification_errors.append(str(e))
+            
+    def registration_form (self, user='', pwd=''):
+        try:    
+            # check if already registered
+            if (not user) or (not pwd):
+                user = 'pyuser'
+                pwd = 'pypasswd'
+                
+                # Fill out registration form
+                self.driver.find_element_by_xpath("//input[@name='name']").send_keys("John You")
+                self.driver.find_element_by_xpath("//input[@name='phone']").send_keys("212-2121")
+                self.driver.find_element_by_xpath("//input[@name='email']").send_keys("john.you@email.com")
+                
+                select = Select(self.driver.find_element_by_name("country"))            
+                select.select_by_value("Canada")
+                #Or: select.select_by_visible_text("Canada")                
+                self.driver.find_element_by_xpath("//input[@name='city']").send_keys("Calgary")
+                
+                # The following 3 elements are tricky; easy to get  "ElementNotVisibleException"
+                self.driver.find_element_by_xpath("//form/fieldset[6]/input").send_keys(user)
+                self.driver.find_element_by_xpath("//form/fieldset[7]/input").send_keys(pwd)
+                self.driver.find_element_by_xpath("(//form/div/div[2]/input)[2]").click()
+                
+                # Once registratin successful, we trigger user login
+                self.registration_form(user, pwd)
+                
+            else: # log in then
+                self.driver.find_element_by_link_text ("Signin").click()
+                
+                try:  self.driver.switch_to_alert()
+                except AssertionError as e: self.verification_errors.append(str(e))
+                
+                # fill in username and password
+                self.driver.find_element_by_xpath("(//div[@id='login']/form/fieldset)[1]/input").send_keys("quinn")
+                self.driver.find_element_by_xpath("(//div[@id='login']/form/fieldset)[2]/input").send_keys("song")
+                
+                # click submit button
+                self.driver.find_element_by_xpath("(//div[@id='login']/form/div/div)[2]/input").click()
+                
+        except Exception as e:
+            self.verification_errors.append(str(e))  
         
     def is_element_present(self, how, what):
         try:
