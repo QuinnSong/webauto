@@ -53,7 +53,7 @@ class PythonDemoTest(unittest.TestCase):
             -----------------------------------------------------------------------""" 
         self.openPage() # open target webpage
         try:
-            WebDriverWait(self.driver, 10).until(
+            WebDriverWait(self.driver, 5).until(
                 EC.element_to_be_clickable((By.XPATH, ur"//section/div[2]/div[2]/div[6]/ul/li/a/figure"))
             )
             if self.is_element_present(By.XPATH, ur"//section/div[2]/div[2]/div[6]/ul/li/a/figure"):
@@ -62,16 +62,21 @@ class PythonDemoTest(unittest.TestCase):
             try:  self.assertTrue(EC.new_window_is_opened)
             except AssertionError as e: self.verification_errors.append(str(e))
             
-            time.sleep(5) # wait for new tab available           
-         
+            handles_before = len(self.driver.window_handles)
+            WebDriverWait(self.driver, 10).until(
+                lambda d : len(d.window_handles) > handles_before
+            )
+
+            time.sleep(3) # wait for new window loading
             self.driver.switch_to_window(self.driver.window_handles[-1])
-            
+            print 'title', self.driver.title
             try: self.assertEqual(self.driver.title, u"Welcome to the Test Site")
             except AssertionError as e: self.verification_errors.append(str(e))
-            time.sleep(5) # wait for new alert popup
             
-            try: self.assertTrue( EC.alert_is_present)
-            except AssertionError as e: self.verification_errors.append(str(e))
+            #wait until new alert popup
+            WebDriverWait(self.driver, 10).until( 
+                lambda d : d.find_element_by_xpath("//form[@class='ajaxsubmit']/h3").is_displayed()
+            )
             
             self.driver.switch_to_alert()
             
