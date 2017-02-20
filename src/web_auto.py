@@ -69,7 +69,7 @@ class PythonDemoTest(unittest.TestCase):
 
             time.sleep(3) # wait for new window loading
             self.driver.switch_to_window(self.driver.window_handles[-1])
-            print 'title', self.driver.title
+
             try: self.assertEqual(self.driver.title, u"Welcome to the Test Site")
             except AssertionError as e: self.verification_errors.append(str(e))
             
