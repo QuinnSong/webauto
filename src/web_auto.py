@@ -14,11 +14,16 @@ from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import unittest, time
+from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+import unittest, time, os
 
 class PythonDemoTest(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Firefox()
+        if os.name == 'posix':
+            binary = FirefoxBinary('/home/jenkins/Downloads/firefox/firefox')
+            self.driver = webdriver.Firefox(firefox_binary=binary)
+        else:
+            self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)
         self.base_url = "http://www.way2automation.com"
         self.accept_alert = True
