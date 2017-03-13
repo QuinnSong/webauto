@@ -14,14 +14,16 @@ from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import unittest, time, os
 
 class PythonDemoTest(unittest.TestCase):
     def setUp(self):
         if os.name == 'posix':
-            binary = FirefoxBinary('/home/jenkins/Downloads/firefox/firefox')
-            self.driver = webdriver.Firefox(firefox_binary=binary)
+            caps = DesiredCapabilities.FIREFOX
+            caps["marionette"] = True
+            caps["binary"] = '/home/jenkins/Downloads/firefox/firefox'
+            self.driver = webdriver.Firefox(capabilities=caps)
         else:
             self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)
