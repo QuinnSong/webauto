@@ -20,6 +20,9 @@ import unittest, time, os
 class PythonDemoTest(unittest.TestCase):
     def setUp(self):
         if os.name == 'posix':
+            from pyvirtualdisplay import Display
+            display = Display(visible=0, size=(800, 600))
+            display.start()
             caps = DesiredCapabilities.FIREFOX
             caps["marionette"] = True
             caps["binary"] = '/home/jenkins/Downloads/firefox/firefox'
