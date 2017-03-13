@@ -19,16 +19,17 @@ import unittest, time, os
 
 class PythonDemoTest(unittest.TestCase):
     def setUp(self):
-        if os.name == 'posix':
-            from pyvirtualdisplay import Display
-            self.display = Display(visible=0, size=(800, 600))
-            self.display.start()
-            caps = DesiredCapabilities.FIREFOX
-            caps["marionette"] = True
-            caps["binary"] = '/home/jenkins/Downloads/firefox/firefox'
-            self.driver = webdriver.Firefox(capabilities=caps)
-        else:
-            self.driver = webdriver.Firefox()
+	self.display = None
+        #if os.name == 'posix':
+        #    from pyvirtualdisplay import Display
+        #    self.display = Display(visible=0, size=(800, 600))
+        #    self.display.start()
+        #    caps = DesiredCapabilities.FIREFOX
+        #    caps["marionette"] = True
+        #    caps["binary"] = '/home/jenkins/Downloads/firefox/firefox'
+        #    self.driver = webdriver.Firefox(capabilities=caps)
+        #else:
+        self.driver = webdriver.Firefox()
         self.driver.implicitly_wait(30)
         self.base_url = "http://www.way2automation.com"
         self.accept_alert = True
@@ -147,8 +148,9 @@ class PythonDemoTest(unittest.TestCase):
         except NoSuchElementException as e:
             return False            
         
-    def tearDown(self):        
-        self.driver.quit()
+    def tearDown(self): 
+	if self.driver:       
+        	self.driver.quit()
         self.display.stop()
         self.assertListEqual([], self.verification_errors)
         
