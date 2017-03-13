@@ -21,8 +21,8 @@ class PythonDemoTest(unittest.TestCase):
     def setUp(self):
         if os.name == 'posix':
             from pyvirtualdisplay import Display
-            display = Display(visible=0, size=(800, 600))
-            display.start()
+            self.display = Display(visible=0, size=(800, 600))
+            self.display.start()
             caps = DesiredCapabilities.FIREFOX
             caps["marionette"] = True
             caps["binary"] = '/home/jenkins/Downloads/firefox/firefox'
@@ -147,8 +147,9 @@ class PythonDemoTest(unittest.TestCase):
         except NoSuchElementException as e:
             return False            
         
-    def tearDown(self):
+    def tearDown(self):        
         self.driver.quit()
+        self.display.stop()
         self.assertListEqual([], self.verification_errors)
         
 if __name__ == '__main__':
