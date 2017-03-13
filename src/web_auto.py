@@ -19,7 +19,7 @@ import unittest, time, os
 
 class PythonDemoTest(unittest.TestCase):
     def setUp(self):
-	    self.display = None
+        self.display = None
         #if os.name == 'posix':
         #    from pyvirtualdisplay import Display
         #    self.display = Display(visible=0, size=(800, 600))
@@ -150,7 +150,7 @@ class PythonDemoTest(unittest.TestCase):
         
     def tearDown(self):       
         self.driver.quit()
-		if self.display: 
+        if self.display: 
             self.display.stop()
         self.assertListEqual([], self.verification_errors)
         
