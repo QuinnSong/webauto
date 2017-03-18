@@ -15,7 +15,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-import unittest, time, os
+import unittest, time, os, sys
 
 class PythonDemoTest(unittest.TestCase):
     def setUp(self):
@@ -158,4 +158,5 @@ if __name__ == '__main__':
     #unittest.main()
      suite = unittest.TestLoader().loadTestsFromTestCase(PythonDemoTest)
      unittest.TextTestRunner(verbosity=2).run(suite)
+     sys.exit(0)
         
