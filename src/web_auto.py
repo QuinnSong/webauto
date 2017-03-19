@@ -158,5 +158,6 @@ if __name__ == '__main__':
     #unittest.main()
      suite = unittest.TestLoader().loadTestsFromTestCase(PythonDemoTest)
      unittest.TextTestRunner(verbosity=2).run(suite)
+     # added exit code
      sys.exit(0)
         
